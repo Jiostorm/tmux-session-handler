@@ -1,0 +1,14 @@
+#!/bin/bash
+
+get_opts() {
+  local option default value
+  option="$1"
+  default="$2"
+  value=$(tmux show-options -gqv "$option")
+
+  if [ -n "$value" ]; then
+    echo "$value"
+  else
+    echo "$default"
+  fi
+}

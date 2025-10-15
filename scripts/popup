@@ -1,0 +1,11 @@
+#!/bin/bash
+
+tab=$(printf '\t')
+fzf_width=$(get_opts "@tmux_fzf_width" 45)
+fzf_height=$(get_opts "@tmux_fzf_height" 15)
+
+fzfer="fzf --layout default"
+switcher="xargs -I{} tmux switch -t {}"
+
+tmux bind M-s display-popup -E -B -h "$fzf_height" -w "$fzf_width" -x 0 -y "#{window_height}" "tmux ls -F '#{p8:[#{session_windows}]}#S' | $fzfer | awk '{ print \$2 }' | $switcher"
+tmux bind M-w display-popup -E -B -h "$fzf_height" -w "$fzf_width" -x 0 -y "#{window_height}" "tmux lsw -a -F '#S:#{p8:#{window_index}}$tab[#W]' | $fzfer | awk '{ print \$1 }' | $switcher"
