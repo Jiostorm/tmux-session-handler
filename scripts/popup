@@ -11,8 +11,10 @@ window_keybind=$(get_opts "@tmux_fzf_window_keybind" "M-w")
 session_format=$(get_opts "@tmux_fzf_session_format" "#{p8:[#{session_windows}]}#S")
 window_format=$(get_opts "@tmux_fzf_window_format" "#S:#{p8:#{window_index}}${tab}[#W]")
 
-fzfer="fzf --layout default"
+fzf_session_opts=$(get_opts "@tmux_fzf_session_opts" "--layout default")
+fzf_window_opts=$(get_opts "@tmux_fzf_window_opts" "--layout default")
+
 switcher="xargs -I{} tmux switch -t {}"
 
-tmux bind "$session_keybind" display-popup -E -B -w "$fzf_width" -h "$fzf_height" -x "$fzf_x" -y "$fzf_y" "tmux ls -F '$session_format' | $fzfer | awk '{ print \$2 }' | $switcher"
-tmux bind "$window_keybind" display-popup -E -B -w "$fzf_width" -h "$fzf_height" -x "$fzf_x" -y "$fzf_y" "tmux lsw -a -F '$window_format' | $fzfer | awk '{ print \$1 }' | $switcher"
+tmux bind "$session_keybind" display-popup -E -B -w "$fzf_width" -h "$fzf_height" -x "$fzf_x" -y "$fzf_y" "tmux ls -F '$session_format' | fzf $fzf_session_opts | awk '{ print \$2 }' | $switcher"
+tmux bind "$window_keybind" display-popup -E -B -w "$fzf_width" -h "$fzf_height" -x "$fzf_x" -y "$fzf_y" "tmux lsw -a -F '$window_format' | fzf $fzf_window_opts | awk '{ print \$1 }' | $switcher"
